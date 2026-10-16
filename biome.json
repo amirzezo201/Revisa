@@ -1,0 +1,69 @@
+{
+  "$schema": "./node_modules/@biomejs/biome/configuration_schema.json",
+  "vcs": {
+    "enabled": false
+  },
+  "files": {
+    "includes": [
+      "app/frontend/**",
+      "*.{js,mjs,cjs,ts,json}",
+      "!app/frontend/components/ui",
+      "!app/frontend/routes.js",
+      "!app/frontend/routes.d.ts",
+      "!app/frontend/lib/composer-*.ts",
+      "!app/frontend/lib/segmented-control.ts",
+      "!app/frontend/lib/utils.ts",
+      "!app/frontend/hooks/use-media-query.ts",
+      "!app/frontend/hooks/use-composer-editor.ts",
+      "!.claude",
+      "!.agents"
+    ]
+  },
+  "formatter": {
+    "enabled": true,
+    "indentStyle": "space",
+    "indentWidth": 2,
+    "lineWidth": 80
+  },
+  "javascript": {
+    "formatter": {
+      "quoteStyle": "double",
+      "semicolons": "asNeeded",
+      "trailingCommas": "all"
+    }
+  },
+  "css": {
+    "parser": {
+      "tailwindDirectives": true
+    }
+  },
+  "linter": {
+    "enabled": true,
+    "rules": {
+      "preset": "recommended",
+      "style": {
+        "useImportType": "error"
+      },
+      "nursery": {
+        "useSortedClasses": {
+          "level": "error",
+          "fix": "safe",
+          "options": {
+            "functions": ["clsx", "cn", "cva"]
+          }
+        }
+      },
+      "a11y": {
+        "noPositiveTabindex": "off"
+      }
+    }
+  },
+  "assist": {
+    "enabled": true,
+    "actions": {
+      "source": {
+        "organizeImports": "on"
+      }
+    }
+  }
+}
