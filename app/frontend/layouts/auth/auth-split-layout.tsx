@@ -26,7 +26,7 @@ export default function AuthSplitLayout({
   description,
   footer,
 }: PropsWithChildren<AuthLayoutProps>) {
-  const appName = import.meta.env.VITE_APP_NAME ?? "RailsInertia"
+  const appName = import.meta.env.VITE_APP_NAME ?? "Revisa"
 
   return (
     <div className="grid min-h-svh lg:grid-cols-2">

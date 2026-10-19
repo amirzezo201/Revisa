@@ -1,16 +1,18 @@
 # frozen_string_literal: true
 
 class UsersController < InertiaController
+  skip_authorization_check
   require_unauthenticated_access only: %i[new create]
+  before_action :require_open_sign_up, only: %i[new create]
 
   def new
     @user = User.new
   end
 
   def create
-    @user = User.new(user_params)
+    @user = User.sign_up_first_owner(user_params)
 
-    if @user.save
+    if @user.persisted?
       start_new_session_for @user
 
       send_email_verification
@@ -22,16 +24,24 @@ class UsersController < InertiaController
 
   def destroy
     user = Current.user
-    if user.authenticate(params[:password_challenge] || "")
-      user.destroy!
+    if !user.authenticate(params[:password_challenge] || "")
+      redirect_to settings_profile_path, inertia: { errors: { password_challenge: "Password challenge is invalid" } }
+    elsif user.destroy
       cookies.delete(:session_id)
       redirect_to sign_in_path, notice: "Your account has been deleted", inertia: { clear_history: true }
     else
-      redirect_to settings_profile_path, inertia: { errors: { password_challenge: "Password challenge is invalid" } }
+      redirect_to settings_profile_path, alert: user.errors.full_messages.to_sentence
     end
   end
 
   private
+
+  # Only the first account can sign up; it becomes the owner. Everyone after is invited.
+  def require_open_sign_up
+    unless Ownership.claimable?
+      redirect_to sign_in_path, alert: "Sign-up is closed. Ask the owner for an invitation."
+    end
+  end
 
   def user_params
     params.permit(:email, :name, :password, :password_confirmation)

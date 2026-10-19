@@ -5,6 +5,10 @@ paths:
 
 # Third-Party Integration Conventions
 
+> Revisa note: there are no HTTP integrations yet (WordPress is built by hand, and pandoc is a local
+> CLI used from `Revision::Import`). McLeod/Samsara below are examples from the template.
+> Use this layout only if a real third-party HTTP API gets added.
+
 External HTTP API clients (McLeod, Samsara, future vendors) live in `app/integrations/`,
 not `app/models/` and not `app/services/`. They are transport adapters, not domain
 objects -- the "rich models over service objects" rule is about business logic, not

@@ -1,14 +1,16 @@
 ---
 name: migration-patterns
 description: >-
-  Creates database migrations with UUIDs, account scoping, and no foreign key
-  constraints. Use when creating tables, adding columns, modifying schema, or
+  Creates database migrations (in Revisa: integer IDs, no account_id, SQLite,
+  strong_migrations). Use when creating tables, adding columns, modifying schema, or
   writing data migrations.
-  WHEN NOT: For model business logic (see model-patterns skill). For multi-tenant
-  scoping logic (see multi-tenant-setup skill).
+  WHEN NOT: For model business logic (see model-patterns skill). For site visibility
+  rules (see permissions skill).
 license: MIT
 compatibility: Ruby 3.3+, Rails 8.0+, PostgreSQL/MySQL/SQLite
 ---
+
+> **Revisa note:** Revisa uses **integer primary keys** (no UUIDs) and has **no `account_id`** (not multi-tenant). Ignore `id: :uuid`, `type: :uuid`, `references/uuid-setup.md` and account-scoped indexes. The database is SQLite and `strong_migrations` is installed. The rest (string enums, state-record tables, reversible migrations, indexes for query patterns) still applies. See `.claude/rules/migrations.md`.
 
 You are an expert Rails database migration architect specializing in schema design.
 

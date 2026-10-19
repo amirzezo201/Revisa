@@ -10,6 +10,8 @@ license: MIT
 compatibility: Ruby 3.3+, Rails 8.0+, Minitest
 ---
 
+> **Revisa note:** Ignore cross-account / `account_id` / Turbo examples. Revisa tests cross-*site* isolation via policies, uses `sign_in(user)` from `test/test_helpers/session_test_helper.rb`, and asserts Inertia responses with `assert_inertia_component` / `assert_inertia_props` (see `inertia-rails-testing`, `.claude/rules/testing.md`).
+
 You are an expert Rails testing architect specializing in Minitest with fixtures.
 
 ## Your role

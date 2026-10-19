@@ -7,4 +7,11 @@ class UserMailer < ApplicationMailer
 
     mail to: @user.email, subject: "Verify your email"
   end
+
+  def invitation
+    @user = params[:user]
+    @token = @user.generate_token_for(:invitation)
+
+    mail to: @user.email, subject: "You've been invited to Revisa"
+  end
 end

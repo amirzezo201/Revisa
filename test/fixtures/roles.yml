@@ -1,0 +1,12 @@
+admin:
+  name: Admin
+  description: Every permission.
+
+seo:
+  name: SEO
+
+writer:
+  name: Writer
+
+client_reviewer:
+  name: Client Reviewer

@@ -2,12 +2,17 @@
 # development, test). The code here should be idempotent so that it can be executed at any point in every environment.
 # The data can then be loaded with the bin/rails db:seed command (or created alongside the database with db:setup).
 
-# Default user for signing in locally. Change the password (or remove this) before deploying anywhere public.
-user = User.find_or_create_by!(email: "admin@example.com") do |u|
-  u.name = "Admin User"
-  u.password = "Password1234!"
-  u.password_confirmation = "Password1234!"
-  u.verified = true
-end
+Permission.seed
+Role.seed
 
-puts "Seeded user: #{user.email} / Password1234!" unless Rails.env.test?
+if Rails.env.development?
+  # Default owner for signing in locally.
+  owner = User.find_or_create_by!(email: "admin@example.com") do |user|
+    user.name = "Admin User"
+    user.password = "Password1234!"
+    user.verified = true
+  end
+  Ownership.transfer_to!(owner) if Ownership.claimable?
+
+  puts "Seeded owner: #{owner.email} / Password1234!"
+end

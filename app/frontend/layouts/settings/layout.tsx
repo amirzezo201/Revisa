@@ -8,6 +8,7 @@ import { cn } from "@/lib/utils"
 import {
   settingsAppearancePath,
   settingsEmailPath,
+  settingsOwnershipPath,
   settingsPasswordPath,
   settingsProfilePath,
   settingsSessionsPath,
@@ -43,7 +44,13 @@ const sidebarNavItems: NavItem[] = [
 ]
 
 export default function SettingsLayout({ children }: PropsWithChildren) {
-  const { url } = usePage()
+  const { url, props } = usePage()
+  const navItems: NavItem[] = props.auth.user.is_owner
+    ? [
+        ...sidebarNavItems,
+        { title: "Ownership", href: settingsOwnershipPath(), icon: null },
+      ]
+    : sidebarNavItems
 
   return (
     <div className="px-4 py-6">
@@ -55,7 +62,7 @@ export default function SettingsLayout({ children }: PropsWithChildren) {
       <div className="flex flex-col space-y-8 lg:flex-row lg:space-x-12 lg:space-y-0">
         <aside className="w-full max-w-xl lg:w-48">
           <nav className="flex flex-col space-x-0 space-y-1">
-            {sidebarNavItems.map((item) => (
+            {navItems.map((item) => (
               <Button
                 key={item.href}
                 size="sm"

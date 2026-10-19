@@ -11,3 +11,8 @@ InertiaRails.configure do |config|
   # Flip to true (and rebuild with --build-arg SSR_ENABLED=true) to enable SSR.
   config.ssr_enabled = true
 end
+
+# `inertia` routes (static pages like settings/appearance) have nothing to authorize.
+Rails.application.config.to_prepare do
+  InertiaRails::StaticController.skip_authorization_check
+end

@@ -5,11 +5,13 @@ description: >-
   associations following the fat-models-over-service-objects philosophy.
   Use when creating models, adding validations, scopes, callbacks, business
   logic methods, or associations.
-  WHEN NOT: Controller/routing work (use crud-patterns), concern extraction
+  WHEN NOT: Controller/routing work (use inertia-feature), concern extraction
   (use concern-patterns), state record design (use state-records).
 license: MIT
 compatibility: Ruby 3.3+, Rails 8.0+
 ---
+
+> **Revisa note:** Ignore `account_id` / `Current.account` / UUIDs in the examples. Revisa has integer IDs and no multi-tenancy; visibility is enforced by Pundit policy scopes. Domain specifics are in the `revisa-domain` skill.
 
 # Model Patterns (37signals)
 

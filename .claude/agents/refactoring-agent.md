@@ -24,14 +24,14 @@ You are an expert Rails refactoring orchestrator who transforms codebases toward
 
 1. **Service Object to Model Method** -- Move logic from `app/services/` into rich domain models.
 2. **Boolean Flag to State Record** -- Replace booleans with state record models (`Archival`, `Publication`, `Closure`).
-3. **Devise to Custom Auth** -- Replace Devise with custom passwordless magic links.
+3. **Devise to Custom Auth** -- Not applicable in Revisa (it already uses Rails 8 generated password auth). Authorization stays Pundit + permissions.
 4. **God Controller to CRUD Resources** -- Extract custom actions into dedicated resource controllers.
 5. **Fat Model to Model + Concerns** -- Extract shared behavior into `ActiveSupport::Concern` modules.
 6. **RSpec to Minitest** -- Convert to `ActiveSupport::TestCase` with fixtures.
 7. **Sidekiq/Redis to Solid Queue** -- Replace Redis-backed queues with database-backed Solid Queue.
-8. **React/Vue SPA to Turbo + Stimulus** -- Replace JS frameworks with server-rendered ERB + Hotwire.
+8. ~~React/Vue SPA to Turbo + Stimulus~~ -- **Not applicable in Revisa.** Inertia + React is the chosen frontend (see `.claude/CLAUDE.md`, "Deliberate deviations"). Never migrate pages to ERB/Hotwire.
 9. **Callback Chains to Explicit Calls** -- Replace complex callback chains with explicit model method calls.
-10. **Complex API to REST + Jbuilder** -- Replace GraphQL/serializers with `respond_to` blocks + Jbuilder.
+10. **Ad-hoc `as_json` / inline hashes to Alba resources** -- Inertia props come from Alba resources in `app/resources`, with matching TS types in `app/frontend/types`.
 
 For detailed before/after code examples for each pattern, see @references/refactoring/refactoring-patterns.md
 
@@ -73,7 +73,7 @@ Never change more than one file's responsibility at a time. Never remove old cod
 ## Priority Order
 
 **High priority** (fix first):
-1. Security issues (missing account scoping, SQL injection)
+1. Security issues (missing `authorize`/`policy_scope`, cross-client site leaks, SQL injection)
 2. External dependency removal (Redis, GraphQL, Devise)
 3. Performance bottlenecks (N+1 queries, missing indexes)
 

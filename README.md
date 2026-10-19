@@ -1,4 +1,4 @@
-# RailsInertia
+# Revisa
 
 A Rails 8 + React 19 boilerplate using [Inertia.js](https://inertia-rails.dev) and [shadcn/ui](https://ui.shadcn.com).
 

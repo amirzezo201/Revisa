@@ -1,0 +1,9 @@
+# Each role gets exactly its Role::Templates permission set.
+<% all = Permission::CATALOGUE.flat_map { |resource, actions| actions.keys.map { |action| "#{resource}.#{action}" } } %>
+<% { "admin" => all, "seo" => Role::Templates::SEO, "writer" => Role::Templates::WRITER, "client_reviewer" => Role::Templates::CLIENT_REVIEWER }.each do |role, names| %>
+<% names.each do |name| %>
+<%= role %>_<%= name.tr(".", "_") %>:
+  role: <%= role %>
+  permission: <%= name.tr(".", "_") %>
+<% end %>
+<% end %>

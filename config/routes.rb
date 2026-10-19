@@ -12,6 +12,16 @@ Rails.application.routes.draw do
   namespace :identity do
     resource :email_verification, only: [ :show, :create ]
     resource :password_reset,     only: [ :new, :edit, :create, :update ]
+    resource :invitation,         only: [ :edit, :update ]
+  end
+
+  namespace :admin do
+    resources :roles, except: [ :show ]
+    resources :users, except: [ :show ] do
+      scope module: :users do
+        resource :invitation, only: [ :create ]
+      end
+    end
   end
 
   get :dashboard, to: "dashboard#index"
@@ -21,6 +31,7 @@ Rails.application.routes.draw do
     resource :password, only: [ :show, :update ]
     resource :email, only: [ :show, :update ]
     resources :sessions, only: [ :index ]
+    resource :ownership, only: [ :show, :update ]
     inertia :appearance
   end
 

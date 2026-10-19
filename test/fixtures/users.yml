@@ -1,4 +1,6 @@
-# Password for both users is: Secret1*3*5*
+# Password for every user is: Secret1*3*5*
+
+# The owner: no role, bypasses every check.
 one:
   email: one@example.com
   name: Test User
@@ -8,5 +10,33 @@ one:
 two:
   email: two@example.com
   name: Another User
+  password_digest: "$2a$04$FPZVbthSpWD4rXvKNiNgzOVDQ3W4ozJjvtr59iUo6hWHCyAiiM9AO"
+  verified: true
+  role: writer
+
+admin:
+  email: admin@example.com
+  name: Ada Admin
+  password_digest: "$2a$04$FPZVbthSpWD4rXvKNiNgzOVDQ3W4ozJjvtr59iUo6hWHCyAiiM9AO"
+  verified: true
+  role: admin
+
+seo:
+  email: seo@example.com
+  name: Sam Seo
+  password_digest: "$2a$04$FPZVbthSpWD4rXvKNiNgzOVDQ3W4ozJjvtr59iUo6hWHCyAiiM9AO"
+  verified: true
+  role: seo
+
+client:
+  email: client@acme.example
+  name: Cleo Client
+  password_digest: "$2a$04$FPZVbthSpWD4rXvKNiNgzOVDQ3W4ozJjvtr59iUo6hWHCyAiiM9AO"
+  verified: true
+  role: client_reviewer
+
+no_role:
+  email: norole@example.com
+  name: Nora Norole
   password_digest: "$2a$04$FPZVbthSpWD4rXvKNiNgzOVDQ3W4ozJjvtr59iUo6hWHCyAiiM9AO"
   verified: true

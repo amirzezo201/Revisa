@@ -1,5 +1,5 @@
-import { Link } from "@inertiajs/react"
-import { BookOpen, Folder, LayoutGrid } from "lucide-react"
+import { Link, usePage } from "@inertiajs/react"
+import { BookOpen, Folder, LayoutGrid, ShieldCheck, Users } from "lucide-react"
 
 import { NavFooter } from "@/components/nav-footer"
 import { NavMain } from "@/components/nav-main"
@@ -13,7 +13,8 @@ import {
   SidebarMenuButton,
   SidebarMenuItem,
 } from "@/components/ui/sidebar"
-import { dashboardPath } from "@/routes"
+import { can } from "@/lib/permissions"
+import { adminRolesPath, adminUsersPath, dashboardPath } from "@/routes"
 import type { NavItem } from "@/types"
 
 import AppLogo from "./app-logo"
@@ -40,6 +41,17 @@ const footerNavItems: NavItem[] = [
 ]
 
 export function AppSidebar() {
+  const { auth } = usePage().props
+  const adminNavItems: NavItem[] = [
+    ...(can(auth.user, "users.index")
+      ? [{ title: "People", href: adminUsersPath(), icon: Users }]
+      : []),
+    // Roles are owner-only (RolePolicy), not delegated through a permission.
+    ...(auth.user.is_owner
+      ? [{ title: "Roles", href: adminRolesPath(), icon: ShieldCheck }]
+      : []),
+  ]
+
   return (
     <Sidebar collapsible="icon" variant="inset">
       <SidebarHeader>
@@ -57,6 +69,9 @@ export function AppSidebar() {
 
       <SidebarContent>
         <NavMain items={mainNavItems} />
+        {adminNavItems.length > 0 && (
+          <NavMain label="Admin" items={adminNavItems} />
+        )}
       </SidebarContent>
 
       <SidebarFooter>

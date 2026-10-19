@@ -6,10 +6,12 @@ description: >-
   audit trails, activity feeds, event recording, webhooks, or when user mentions
   events, tracking, webhooks, or activity logs.
   WHEN NOT: For state changes as records (use state-records), for background
-  job patterns (use job-patterns), for mailer delivery (use mailer-patterns).
+  job patterns (use job-patterns), for mailer delivery (see .claude/rules/mailers.md).
 license: MIT
 compatibility: Ruby 3.3+, Rails 8.0+, Solid Queue
 ---
+
+> **Revisa note:** Revisa's `Event` is `page_id, eventable (poly), action, creator_id, particulars (json)`, with no `account_id`. Ignore webhooks and Turbo broadcasts unless asked. Event visibility follows the page's site via policy scopes. See the `review-workflow` skill.
 
 # Event Tracking
 

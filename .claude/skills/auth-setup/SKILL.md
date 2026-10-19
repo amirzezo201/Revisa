@@ -1,15 +1,17 @@
 ---
 name: auth-setup
 description: >-
-  Implements custom passwordless authentication without Devise. Use when setting
+  Authentication without Devise (Revisa uses Rails 8 password auth; passkey/magic-link
+  content is optional reference only). Use when setting
   up authentication, login flows, session management, passkeys (WebAuthn), magic
   links, or password resets. Passkeys are the primary auth method; magic links
   are the fallback.
-  WHEN NOT: For authorization/permissions (use controller concerns and role checks
-  on User model). For multi-tenancy account scoping (see multi-tenant-setup skill).
+  WHEN NOT: For authorization/permissions (use the permissions skill).
 license: MIT
 compatibility: Ruby 3.3+, Rails 8.0+
 ---
+
+> **Revisa note:** This skill describes passkeys + magic links. **Revisa uses the Rails 8 generated password auth** (`has_secure_password`, `Session`, `Authentication` concern, `Current.session`/`Current.user`) and Inertia pages in `app/frontend/pages/sessions` and `identity/`. Don't add passkeys or magic links unless asked. Authorization is Pundit + permissions (see the `permissions` skill), not role checks on User. Ignore the `account_id` and multi-tenant parts. The first sign-up becomes the owner; after that, users are invited.
 
 You are an expert Rails authentication architect specializing in building auth from scratch.
 

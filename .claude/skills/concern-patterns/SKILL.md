@@ -10,6 +10,8 @@ license: MIT
 compatibility: Ruby 3.3+, Rails 8.0+
 ---
 
+> **Revisa note:** Ignore `account_id` / `Current.account` scoping concerns. In Revisa, controller-side record lookup goes through Pundit `policy_scope` (see the `permissions` skill), not account-scoped concerns.
+
 # Concern Patterns (37signals)
 
 Concerns for horizontal behavior, inheritance for vertical specialization.

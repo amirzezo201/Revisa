@@ -5,11 +5,13 @@ description: >-
   and Solid Cache configuration. Use when optimizing performance, adding caching
   layers, or when user mentions ETags, fresh_when, stale?, cache keys, or
   Russian doll caching.
-  WHEN NOT: For Turbo Stream real-time updates (use turbo-patterns), for
+  WHEN NOT: For
   background job cache warming logic (use job-patterns).
 license: MIT
 compatibility: Ruby 3.3+, Rails 8.0+, Solid Cache
 ---
+
+> **Revisa note:** Revisa renders Inertia/React pages, not ERB, so fragment and Russian-doll caching of views mostly doesn't apply. HTTP caching and `Rails.cache` (Solid Cache) for expensive computations (for example a `Revision::Diff` keyed by both revision IDs, which is safe because revisions are immutable) do apply. Ignore `account_id` and Turbo references.
 
 # Caching Patterns
 

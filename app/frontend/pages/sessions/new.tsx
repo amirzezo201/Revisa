@@ -7,16 +7,24 @@ import { Input } from "@/components/ui/input"
 import AuthLayout from "@/layouts/auth-layout"
 import { newIdentityPasswordResetPath, signInPath, signUpPath } from "@/routes"
 
-export default function Login() {
+interface LoginProps {
+  sign_up_open: boolean
+}
+
+export default function Login({ sign_up_open }: LoginProps) {
   return (
     <AuthLayout
       footer={
-        <>
-          Don&apos;t have an account?{" "}
-          <TextLink href={signUpPath()} tabIndex={5}>
-            Sign up
-          </TextLink>
-        </>
+        sign_up_open ? (
+          <>
+            Setting up Revisa?{" "}
+            <TextLink href={signUpPath()} tabIndex={5}>
+              Create the owner account
+            </TextLink>
+          </>
+        ) : (
+          <>Don&apos;t have an account? Ask the owner for an invitation.</>
+        )
       }
       title="Log in to your account"
       description="Enter your email and password below to log in"

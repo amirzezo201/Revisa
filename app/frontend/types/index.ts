@@ -1,7 +1,7 @@
 import type { LucideIcon } from "lucide-react"
 
 export interface Auth {
-  user: User
+  user: CurrentUser
   session: Pick<Session, "id">
 }
 
@@ -35,6 +35,48 @@ export interface User {
   created_at: string
   updated_at: string
   [key: string]: unknown // This allows for additional properties...
+}
+
+export interface CurrentUser extends User {
+  is_owner: boolean
+  // "resource.action" names; the owner gets ["*"]
+  permissions: string[]
+}
+
+export interface Permission {
+  id: number
+  name: string
+  resource: string
+  action: string
+  description: string | null
+}
+
+// Permission.catalogue: resource => its permissions
+export type PermissionCatalogue = Record<string, Permission[]>
+
+export interface RoleOption {
+  id: number
+  name: string
+  description?: string | null
+}
+
+export interface AdminRole {
+  id: number
+  name: string
+  description: string | null
+  permissions_count: number
+  users_count: number
+}
+
+export interface AdminUser {
+  id: number
+  name: string
+  email: string
+  role_id: number | null
+  role_name: string | null
+  is_owner: boolean
+  pending: boolean
+  created_at: string
 }
 
 export interface Session {

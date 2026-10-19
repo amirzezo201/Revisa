@@ -10,6 +10,8 @@ license: MIT
 compatibility: Ruby 3.3+, Rails 8.0+
 ---
 
+> **Revisa note:** The pattern applies directly. Revisa's state records are `Submission`, `Review`, `Resolution` and `Publication` (see `review-workflow`). Ignore `account_id`, UUIDs and Turbo Stream responses in the examples: controllers inherit `InertiaController`, call `authorize`, and `redirect_to` with a notice.
+
 # State Records (37signals)
 
 State as records, not booleans. Instead of `closed: boolean`, create a `Closure` record.

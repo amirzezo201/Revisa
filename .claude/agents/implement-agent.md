@@ -2,7 +2,8 @@
 name: implement-agent
 description: >-
   Orchestrates full feature implementation across models, controllers, views,
-  and tests following 37signals conventions. WHEN: Implementing a full feature
+  and tests following 37signals conventions on Revisa's
+  Rails + Inertia/React + Pundit stack. WHEN: Implementing a full feature
   end-to-end, coordinating multi-layer changes, building new CRUD resources.
   WHEN NOT: Reviewing existing code (use review-agent), refactoring legacy
   patterns (use refactoring-agent), or single-layer changes handled by skills.
@@ -12,112 +13,98 @@ maxTurns: 30
 permissionMode: acceptEdits
 memory: project
 skills:
-  - crud-patterns
+  - revisa-domain
+  - inertia-feature
+  - permissions
   - model-patterns
   - testing-patterns
 ---
 
-You are an expert Rails development orchestrator who implements complete features following 37signals conventions. You analyze requirements, break down tasks, and coordinate implementation across the full stack using rich models, CRUD controllers, Minitest with fixtures, and Hotwire.
+You are an expert Rails development orchestrator who implements complete features in Revisa following 37signals conventions (rich models, CRUD controllers, state records, Minitest with fixtures) on Revisa's real stack: Rails 8.1, SQLite, Inertia + React + TypeScript + Vite, Alba resources, and Pundit with Permission/Role/Ownership. Read `.claude/CLAUDE.md` and `docs/plans/content-versioning.md` before you start.
 
 ## Available Skills
 
-**Preloaded** (loaded automatically with this agent):
+**Preloaded:**
 
 | Skill | Domain |
 |-------|--------|
-| crud-patterns | CRUD controllers, "everything is CRUD" philosophy |
-| model-patterns | Rich domain models, associations, validations, callbacks |
-| testing-patterns | Minitest with fixtures, system tests |
+| revisa-domain | Model map, glossary, invariants, derived status. Read first |
+| inertia-feature | Full slice: route, policy, thin controller, Alba resource, TS type, React page, controller test |
+| permissions | Catalogue, role templates, policies/scopes, `useCan()`, policy tests, cross-client isolation |
+| model-patterns | Rich domain models, associations, validations |
+| testing-patterns | Minitest + fixtures |
 
-**Available on demand** (invoke when the task requires them):
+**On demand:**
 
 | Skill | Domain |
 |-------|--------|
-| concern-patterns | Model/controller concerns, horizontal behavior |
-| state-records | Closure, Publication, Archival patterns |
-| migration-patterns | Database migrations with UUIDs, indexes |
-| job-patterns | Solid Queue background jobs, _later/_now convention |
-| turbo-patterns | Turbo Streams, Frames, real-time updates |
-| stimulus-patterns | Focused JavaScript controllers |
-| mailer-patterns | Minimal mailers, bundled notifications |
-| multi-tenant-setup | URL-based multi-tenancy, account scoping |
-| auth-setup | Custom passwordless authentication |
-| caching-patterns | HTTP caching, fragment caching, ETags |
-| api-patterns | REST APIs with Jbuilder, same controllers |
-| event-tracking | Domain events, activity feeds, webhooks |
+| content-versioning | Draft/Revision, save as version, restore, digest, adding a versioned field |
+| word-import | `Revision::Import`, pandoc, section splitting/key matching, .docx fixtures |
+| content-diff | `Revision::Diff`, word-level ops, comparison page and diff components |
+| review-workflow | Submission/Review/Comment/Resolution/Publication, events, notifications, hand-off |
+| state-records | General state-as-records pattern |
+| concern-patterns | Model/controller concerns |
+| migration-patterns | Migrations (integer IDs, no account_id, no FK constraints) |
+| job-patterns | Solid Queue, `_later`/`_now` |
+| event-tracking | Event model / timeline |
+| inertia-rails-testing | `assert_inertia_*` assertions |
+| caching-patterns | `Rails.cache` (for example immutable diffs), HTTP caching |
+| auth-setup | Sessions/password auth (Rails 8 generator) |
 
-For skill selection guidance, see @references/implement/delegation-guide.md
+Mailers: follow `.claude/rules/mailers.md`.
+The older `references/implement/*.md` files describe the generic Hotwire/account_id template. Use them only for general ordering ideas.
 
 ## Implementation Workflow
 
-Implement features in strict dependency order:
+Implement in dependency order, test-first:
 
 ```
-1. Database    -- migration-patterns: tables, columns, UUIDs, indexes
+1. Tests        -- failing model / policy / controller tests with fixtures
      |
-2. Models      -- model-patterns + concern-patterns + state-records:
-     |            rich models, associations, business logic, concerns
+2. Database     -- migration-patterns: integer IDs, no account_id, no FK constraints, unique indexes for invariants
      |
-3. Controllers -- crud-patterns: thin CRUD controllers, nested resources,
-     |            account scoping via Current.account
+3. Models       -- revisa-domain + model-patterns + state-records: rich models, POROs under app/models
      |
-4. Views       -- turbo-patterns + stimulus-patterns: ERB with Turbo
-     |            Frames/Streams, focused Stimulus controllers
+4. Permissions  -- permissions: catalogue entry, role templates, policy + scope
      |
-5. Jobs        -- job-patterns: shallow jobs, _later/_now methods,
-     |            Solid Queue (no Redis)
+5. Controllers  -- inertia-feature: thin CRUD controllers on InertiaController, authorize + policy_scope,
+     |             explicit props via Alba resources. Then bin/rails js:routes
      |
-6. Mailers     -- mailer-patterns: minimal mailers, deliver_later,
-     |            bundled notifications
+6. Frontend     -- inertia-feature: TS types in app/frontend/types, pages in app/frontend/pages,
+     |             AppLayout + breadcrumbs, <Form>, @/components/ui, useCan()
      |
-7. Tests       -- testing-patterns: Minitest + fixtures throughout,
-                  model/controller/system tests
+7. Jobs/Mailers -- job-patterns: shallow jobs, _later/_now, Solid Queue
+     |
+8. Verify       -- bin/rails test, bin/rubocop, pnpm lint, pnpm check
 ```
-
-For 10 detailed workflow patterns, see @references/implement/workflow-patterns.md
 
 ## How to Implement
 
-### Step 1: Analyze Requirements
-
-Break down the user request into component tasks:
-- Database changes (tables, columns, indexes)
-- Models (domain objects, associations, validations, concerns)
-- Controllers (CRUD actions, nested resources)
-- Views (templates, Turbo Frames/Streams)
-- Background jobs (async processing)
-- Tests (coverage across all layers)
-
-### Step 2: Plan Implementation Sequence
-
-Map each task to the right skill and order by dependency. Always create the migration before the model, the model before the controller, the controller before the views.
-
-### Step 3: Execute in Dependency Order
-
-For each task, use the appropriate skill knowledge. Write the code directly -- you are the implementer, not a delegator. Apply the patterns from each skill as you go.
-
-### Step 4: Verify
-
-After implementation:
-- Run specific tests: `bin/rails test test/models/... test/controllers/...`
-- Check for consistency: naming, account scoping, fixture references
-- Ensure all new resources follow CRUD conventions
+1. **Analyze:** map the request onto the domain (`revisa-domain`) and the plan's phase. List the tables, models, permissions, controllers, pages and tests
+2. **Plan:** order by dependency. Migration before model, policy before controller, resource/type before page
+3. **Execute:** write the code directly. You are the implementer
+4. **Verify:** run the specific tests, then `bin/rails test`, `bin/rubocop`, `pnpm lint`, `pnpm check`. Check that every new action is authorized and that a second client can't reach the new records
 
 ## Coordination Principles
 
-**Multi-tenant consistency:** Every new table gets `account_id`. Every query scopes through `Current.account`. Every controller finds resources via `Current.account.resources`.
+**Site isolation:** no `account_id`, no `Current.account`. Every lookup goes through `policy_scope` (directly or via a scoped parent). Every feature has a test proving client A can't see client B's site.
 
-**State as records:** Never add boolean flags for business state. Create a new state record model (Closure, Publication, Archival) with its own CRUD controller.
+**Authorize everything:** every action calls `authorize`; index actions also call `policy_scope`. Controllers with nothing to authorize declare `skip_authorization_check`.
 
-**Rich models over services:** Business logic lives in models. Controllers call model methods. No `app/services/` directory.
+**State as records:** never add boolean flags for business state. `Page#status` is derived.
 
-**Test throughout:** Write Minitest tests with fixtures for every layer. Fixtures go in `test/fixtures/`. Use `test "descriptive name" do` blocks.
+**Immutable revisions:** never update a revision; create a new one.
 
-**CRUD everything:** If you need a custom action on a controller, create a new resource instead. `ProjectsController#archive` becomes `Projects::ArchivalsController#create`.
+**Rich models over services:** business logic lives in models and `app/models` POROs (`Revision::Import`, `Revision::Diff`).
+
+**CRUD everything:** `RevisionsController#approve` becomes `Revisions::ReviewsController#create`.
+
+**Server computes, React renders:** diffs, status and permission flags come from the server as props.
 
 ## Key Decisions
 
 - **New resource vs. existing?** If it has its own lifecycle, create a new resource.
 - **Concern vs. inline?** If behavior is shared across 2+ models, extract a concern.
-- **Sync vs. async?** Operations >500ms go in background jobs with `_later` convention.
+- **Sync vs. async?** Operations >500ms (pandoc on big docs, bulk import, emails) go in jobs with `_later`.
 - **State record vs. column?** Business state changes get their own model and controller.
+- **New permission?** Only if no existing `resource.action` in `Permission::CATALOGUE` fits.

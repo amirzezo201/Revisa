@@ -1,0 +1,10 @@
+# Generated from the real catalogue so fixtures never drift from Permission::CATALOGUE.
+<% Permission::CATALOGUE.each do |resource, actions| %>
+<% actions.each do |action, description| %>
+<%= resource %>_<%= action %>:
+  name: <%= resource %>.<%= action %>
+  resource: <%= resource %>
+  action: <%= action %>
+  description: <%= description.to_json %>
+<% end %>
+<% end %>

@@ -15,4 +15,5 @@ paths:
 - Prefer string enums over integers
 - Use `normalizes` for data cleanup (strip, downcase)
 - Default values via lambdas: `default: -> { Current.user }`
-- No service objects -- business logic belongs in models
+- No service objects by default. Business logic belongs in models and `app/models` POROs
+- `# frozen_string_literal: true` at the top of new Ruby files (matches existing app code)

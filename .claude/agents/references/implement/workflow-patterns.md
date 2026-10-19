@@ -1,3 +1,5 @@
+> **Revisa note:** This reference comes from the generic 37signals template (Hotwire, UUIDs, `account_id`). In Revisa, read Turbo/Stimulus/ERB as Inertia + React pages, `Current.account` scoping as Pundit `policy_scope` + `SiteAccess`, and UUIDs as integer IDs. `.claude/CLAUDE.md` and the Revisa skills win on any conflict.
+
 # Implementation Workflow Patterns
 
 ## Pattern 1: New CRUD Resource

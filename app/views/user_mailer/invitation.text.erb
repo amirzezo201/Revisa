@@ -1,0 +1,8 @@
+Hi <%= @user.name %>,
+
+You've been invited to Revisa, where we review and approve page content together.
+
+Choose a password and sign in:
+<%= edit_identity_invitation_url(token: @token) %>
+
+This link expires in 7 days.
